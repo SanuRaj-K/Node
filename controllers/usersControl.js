@@ -84,7 +84,7 @@ const cartByIdPost = asyncErrorHandler(async (req, res) => {
   } else {
     user.cart.push(addProd);
     await user.save();
-    res.json(user)
+    res.json(user);
   }
 });
 
@@ -101,16 +101,48 @@ const wishlist = asyncErrorHandler(async (req, res) => {
   }
 });
 
+//////////////// Add to wishlist /////////////
+const addToWishlist = asyncErrorHandler(async (req, res) => {
+  const id = req.params.id;
+  const prodId = req.body.id;
+  const addProd = await products.findById(prodId);
+  const user = await userModel.findById(id);
+  const isExtst = user.wishlist.find((item) => item._id == prodId);
+  if (isExtst) {
+    res.send("Item is already in wishlist");
+  } else {
+    user.wishlist.push(addProd);
+    await user.save();
+    res.json(user.wishlist);
+  }
+});
+
 ////////////// delete whishlist ////////////
 
-const deleteWishlist = async (req, res) => {
+const deleteWishlist = asyncErrorHandler(async (req, res) => {
   const id = req.params.id;
+  const prodId = req.body.id;
   const user = await userModel.findById(id);
-  const arr = [];
-  user.wishlist = arr;
-  await user.save();
-  res.send("wishlist deleted");
-};
+  const deleteItem = user.wishlist.filter((item) => item._id != prodId);
+  const isExtst = user.wishlist.find((item) => item._id == prodId);
+
+  if (!isExtst) {
+    res.send("Product is not exist");
+  } else {
+    const upatedUser = await userModel.findByIdAndUpdate(
+      id,
+      {
+        $set: { wishlist: deleteItem },
+      },
+      { new: true }
+    );
+    await upatedUser.save()
+    res.json({
+      message: "product successfully deleted",
+      data: upatedUser.wishlist,
+    });
+  }
+});
 
 module.exports = {
   getProducts,
@@ -121,5 +153,6 @@ module.exports = {
   register,
   cartByIdPost,
   wishlist,
+  addToWishlist,
   deleteWishlist,
 };

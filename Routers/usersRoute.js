@@ -9,6 +9,7 @@ router.get("/:id/cart", authentication, userController.getCart);
 router.post("/login", userController.login);
 router.post("/register", userController.register);
 router.post("/:id/cart", authentication, userController.cartByIdPost);
+router.post("/:id/wishlist", authentication, userController.addToWishlist);
 router.get("/:id/wishlist", authentication, userController.wishlist);
 router.delete("/:id/wishlist", authentication, userController.deleteWishlist);
 module.exports = router;
