@@ -5,8 +5,8 @@ const cloudinary = require("../cloudinary");
 const asyncErrorHandler = require("../helpers/asyncErrorHandler");
 const customError = require("../helpers/coustomError");
 const admin = {
-  username: "sanu",
-  password: "1234",
+  username: process.env.ADMIN_USER_NAME,
+  password: process.env.ADMIN_PASSWORD,
 };
 
 ////// Admin login/////////////
@@ -50,8 +50,8 @@ const adminUserById = asyncErrorHandler(async (req, res, next) => {
 const adminUsers = asyncErrorHandler(async (req, res, next) => {
   const data = await userModel.find();
   if (data.length === 0) {
-    const err= new customError("users not found", 404)
-    return next(err)
+    const err = new customError("users not found", 404);
+    return next(err);
   } else {
     res.json({
       message: "successfully fetched users Details",
@@ -64,9 +64,9 @@ const adminUsers = asyncErrorHandler(async (req, res, next) => {
 
 const adminProducts = asyncErrorHandler(async (req, res, next) => {
   const products = await Products.find();
-  if(!products){
-    const err= new customError("products not found", 404)
-    return next(err)
+  if (!products) {
+    const err = new customError("products not found", 404);
+    return next(err);
   }
   res.status(200).json({
     status: "success",
@@ -80,9 +80,9 @@ const adminProducts = asyncErrorHandler(async (req, res, next) => {
 const adminCategoryProduct = asyncErrorHandler(async (req, res, next) => {
   const category = req.query.category;
   const prod = await Products.find({ category: category });
-  if(!prod){
-    const err= new customError(`Products not found on ${category}`, 404)
-    return next(err)
+  if (!prod) {
+    const err = new customError(`Products not found on ${category}`, 404);
+    return next(err);
   }
   res.status(200).json({
     status: "success",
@@ -97,8 +97,8 @@ const adminProductById = asyncErrorHandler(async (req, res, next) => {
   const id = req.params.id;
   const product = await Products.findById(id);
   if (!product) {
-    const err= new customError(`products not found on ${id} this ID`, 404)
-    return next(err)
+    const err = new customError(`products not found on ${id} this ID`, 404);
+    return next(err);
   } else {
     res.status(200).json({
       status: "success",
