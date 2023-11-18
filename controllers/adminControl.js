@@ -47,10 +47,11 @@ const adminUserById = asyncErrorHandler(async (req, res, next) => {
 
 /////// View all Users//////////////
 
-const adminUsers = asyncErrorHandler(async (req, res) => {
+const adminUsers = asyncErrorHandler(async (req, res, next) => {
   const data = await userModel.find();
   if (data.length === 0) {
-    res.send("no Products found");
+    const err= new customError("users not found", 404)
+    return next(err)
   } else {
     res.json({
       message: "successfully fetched users Details",
@@ -61,8 +62,12 @@ const adminUsers = asyncErrorHandler(async (req, res) => {
 
 //////////// View all Products///////////
 
-const adminProducts = asyncErrorHandler(async (req, res) => {
+const adminProducts = asyncErrorHandler(async (req, res, next) => {
   const products = await Products.find();
+  if(!products){
+    const err= new customError("products not found", 404)
+    return next(err)
+  }
   res.status(200).json({
     status: "success",
     message: "Successfully fetched products detail.",
@@ -72,9 +77,13 @@ const adminProducts = asyncErrorHandler(async (req, res) => {
 
 ///////////// View Products by Caterory///////////
 
-const adminCategoryProduct = asyncErrorHandler(async (req, res) => {
+const adminCategoryProduct = asyncErrorHandler(async (req, res, next) => {
   const category = req.query.category;
   const prod = await Products.find({ category: category });
+  if(!prod){
+    const err= new customError(`Products not found on ${category}`, 404)
+    return next(err)
+  }
   res.status(200).json({
     status: "success",
     message: "Successfully fetched products detail.",
@@ -84,11 +93,12 @@ const adminCategoryProduct = asyncErrorHandler(async (req, res) => {
 
 /////////// View Product By Id/////////
 
-const adminProductById = asyncErrorHandler(async (req, res) => {
+const adminProductById = asyncErrorHandler(async (req, res, next) => {
   const id = req.params.id;
   const product = await Products.findById(id);
   if (!product) {
-    res.send("no product");
+    const err= new customError(`products not found on ${id} this ID`, 404)
+    return next(err)
   } else {
     res.status(200).json({
       status: "success",
