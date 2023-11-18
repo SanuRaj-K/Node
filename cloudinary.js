@@ -1,7 +1,8 @@
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
-  cloud_name: "dgoermgtp",
-  api_key: "793724638942354",
-  api_secret: "9wtYsULCkM5qkKZK3QHy0RxJJHc",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 module.exports = cloudinary;
+

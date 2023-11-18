@@ -15,7 +15,7 @@ router.post(
   adminAuth,
   multer.single("image"),
   adminControl.adminAddProduct
-);
+);    
 router.get("/orders", adminAuth, adminControl.adminOrders);
 router.get("/stats", adminAuth, adminControl.adminStats);
 router.delete("/products/:id", adminAuth, adminControl.adminDeleteProduct);
